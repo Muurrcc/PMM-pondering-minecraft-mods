@@ -30,6 +30,7 @@ Cycling verbs, a breathing glyph and your real mod-loading progress bars — ins
 - [Project layout](#project-layout)
 - [Building from source](#building-from-source)
 - [Troubleshooting](#troubleshooting)
+- [Contributors](#contributors)
 - [Credits & license](#credits--license)
 
 ## Features
@@ -145,6 +146,13 @@ To preview the screen without launching Minecraft, compile and run `test/Harness
 | No early window at all | `earlyWindowProvider` is `"pondering"` but the jar is missing from `mods` |
 | Game exits right after "Launching target" | The error is written to `logs/pondering-trace.log` — open an issue with its stack trace |
 | Need step-by-step diagnostics | Add `-Dpondering.trace=true` to the JVM arguments |
+
+## Contributors
+
+| | |
+|---|---|
+| **[Muurrcc](https://github.com/Muurrcc)** | Author, design direction, testing |
+| **Claude** (Anthropic) | Co-author: reverse-engineering of the NeoForge early window, renderer and mod implementation (credited via `Co-Authored-By` on the commits) |
 
 ## Credits & license
 
