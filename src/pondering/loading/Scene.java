@@ -20,14 +20,14 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 /**
- * Pantalla de carga estilo "Pondering...": glifo que se funde entre frames + verbo que cambia
- * con efecto de escritura + barras de progreso. Dibuja con GL puro (sin las piezas internas de NeoForge).
- * Coordenadas como las de NeoForge: origen arriba-izquierda, en pixeles del framebuffer.
+ * "Pondering..." style loading screen: glyph crossfading between frames + verb that changes with a
+ * typing effect + progress bars. Draws with plain GL (no NeoForge internals).
+ * Coordinates like NeoForge's: top-left origin, in framebuffer pixels.
  */
 final class Scene {
     record Bar(float progress, boolean indeterminate, String label) {}
 
-    // Colores del proyecto de wallpaper
+    // Colours from the wallpaper project
     static final int[] BG = {255, 251, 245};     // #fffbf5
     private static final float[] GLYPH = rgb(198, 97, 63);   // #c6613f
     private static final float[] TEXT = rgb(59, 59, 59);     // #3b3b3b
@@ -56,7 +56,7 @@ final class Scene {
     private float textBoxW;
     private FloatBuffer vertices = BufferUtils.createFloatBuffer(8 * 6 * 160);
 
-    // estado de texto
+    // text state
     private String state;
     private String target;
     private int index;
@@ -226,7 +226,7 @@ final class Scene {
         return s;
     }
 
-    // ---------------------------------------------------------------- texto
+    // ---------------------------------------------------------------- text
 
     private Glyph glyph(int cls, int cp) {
         Glyph g = glyphs.get(key(cls, cp));
@@ -286,7 +286,7 @@ final class Scene {
         flush(1);
     }
 
-    // ---------------------------------------------------------------- animacion de texto
+    // ---------------------------------------------------------------- text animation
 
 
     private char stage(char target, int s) {
@@ -336,9 +336,9 @@ final class Scene {
         }
     }
 
-    // ---------------------------------------------------------------- dibujo
+    // ---------------------------------------------------------------- drawing
 
-    /** Dibuja una escena completa. alpha 0..1 (fundido final). */
+    /** Draws a full scene. alpha 0..1 (final fade). */
     void draw(int w, int h, float alpha, List<Bar> bars) {
         int prevProgram = GL32C.glGetInteger(GL32C.GL_CURRENT_PROGRAM);
         int prevVao = GL32C.glGetInteger(GL32C.GL_VERTEX_ARRAY_BINDING);
@@ -387,7 +387,7 @@ final class Scene {
         float cx = w * 0.53f, cy = h * 0.5f;
         float left = cx - total / 2f;
 
-        // glifo: 12 frames (ida y vuelta) con fundido entre ellos
+        // glyph: 12 frames (there and back) crossfaded
         int n = GLYPHS.length * 2;
         float p = (elapsed / (float) FRAME_MS) % n;
         int i = (int) p;

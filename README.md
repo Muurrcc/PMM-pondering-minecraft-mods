@@ -1,54 +1,153 @@
+<div align="center">
+
 # PMM — Pondering Minecraft Mods
 
-Pantalla de carga temprana para **NeoForge 1.21.1** con el estilo "Pondering…": fondo crema, un glifo que se funde entre frames y un verbo que cambia con efecto de escritura. Mantiene las barras de progreso reales de NeoForge.
+**A calm, animated early loading screen for NeoForge 1.21.1.**<br>
+Cycling verbs, a breathing glyph and your real mod-loading progress bars — instead of the red fox screen.
 
-*English: a drop-in NeoForge early-loading-screen replacement (spinner glyph + cycling verbs + real progress bars). Windows only.*
+![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-62B47A?style=flat&logo=minecraft&logoColor=white)
+![NeoForge](https://img.shields.io/badge/NeoForge-21.1.252-E68C37?style=flat)
+![Java](https://img.shields.io/badge/Java-21-007396?style=flat&logo=openjdk&logoColor=white)
+![OpenGL](https://img.shields.io/badge/OpenGL-3.2%20core-5586A4?style=flat&logo=opengl&logoColor=white)
+![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D4?style=flat&logo=windows&logoColor=white)
+![Version](https://img.shields.io/badge/version-1.0.0-C6613F?style=flat)
+![License](https://img.shields.io/badge/license-MIT-blue?style=flat)
 
 ![PMM loading screen](docs/pmm-loading.gif)
 
-| | | |
-|---|---|---|
-| ![](docs/screenshot-1.png) | ![](docs/screenshot-2.png) | ![](docs/screenshot-3.png) |
+</div>
 
-## Qué hace
+---
 
-- Sustituye la pantalla roja del zorro que sale mientras arranca Minecraft.
-- Glifo `· ✢ * ✶ ✻ ✽` (y vuelta) con fundido de 170 ms entre frames.
-- 82 verbos que rotan (2 s, 3 s, 5 s…) con cascada de escritura de 40 ms por paso (`▌` → `. _` → letra).
-- Barras de progreso de NeoForge (hasta 2) redondeadas, en naranja `#c6613f` sobre crema `#fffbf5`, con su texto debajo.
-- Sin música, sin hora, sin logo de Mojang.
+## Table of contents
 
-## Instalación
+- [Features](#features)
+- [Preview](#preview)
+- [Installation](#installation)
+- [Uninstalling](#uninstalling)
+- [How it works](#how-it-works)
+- [Tech stack](#tech-stack)
+- [Project layout](#project-layout)
+- [Building from source](#building-from-source)
+- [Troubleshooting](#troubleshooting)
+- [Credits & license](#credits--license)
 
-1. Copia [`dist/PMM-1.0.jar`](dist/PMM-1.0.jar) a la carpeta `mods` de tu instancia.
-2. En `config/fml.toml` pon:
+## Features
+
+- **Replaces the stock early window** (the red screen with the running fox) shown while Minecraft and NeoForge boot.
+- **Animated glyph** — `· ✢ * ✶ ✻ ✽` and back, crossfaded smoothly between frames.
+- **82 rotating verbs** ("Pondering…", "Noodling…", "Reticulating…") with a per-letter typing cascade (`▌` → `. _` → letter).
+- **Real progress bars** — NeoForge's own loading meters (up to two), drawn as rounded bars with their labels.
+- **Warm, quiet palette** — cream `#fffbf5` background, orange `#c6613f` accents, soft grey `#3b3b3b` text.
+- **No music, no clock, no Mojang logo** — just the loading screen.
+- **Fail-safe** — if anything goes wrong while setting it up, NeoForge's stock screen stays.
+- **Zero extra dependencies** — it only uses libraries Minecraft already ships.
+
+## Preview
+
+<div align="center">
+
+| Start | Mid-load | Almost done |
+|:---:|:---:|:---:|
+| ![Start](docs/screenshot-1.png) | ![Mid-load](docs/screenshot-2.png) | ![Almost done](docs/screenshot-3.png) |
+
+</div>
+
+> Captures come from the included visual test harness (same renderer, rendered in a plain window).
+
+## Installation
+
+1. Download [`dist/PMM-1.0.jar`](dist/PMM-1.0.jar).
+2. Drop it into your instance's `mods` folder.
+3. Open `config/fml.toml` and set:
+
    ```toml
    earlyWindowProvider = "pondering"
    ```
-3. Arranca el juego.
 
-Para quitarlo: `earlyWindowProvider = "fmlearlywindow"` (y borra el jar).
+4. Launch the game.
 
-**Requisitos:** NeoForge 21.1.x (probado con 21.1.252 / FML 4.0.44), Windows (usa `segoeui.ttf` y `seguisym.ttf` de `C:\Windows\Fonts`).
+**Requirements**
 
-## Tecnología
+| | |
+|---|---|
+| Minecraft | 1.21.1 |
+| NeoForge | 21.1.x (tested with 21.1.252, FML 4.0.44) |
+| Java | 21 (the one Minecraft 1.21.1 already uses) |
+| OS | Windows 10/11 — fonts are read from `C:\Windows\Fonts` (`segoeui.ttf`, `seguisym.ttf`) |
 
-- **Java 21**, OpenGL 3.2 core (LWJGL 3.3.3: GLFW, OpenGL, stb_truetype). Sin dependencias extra.
-- **Proveedor de ventana temprana**: `PonderingWindow` hereda de `DisplayWindow` de NeoForge (el overlay de carga de NeoForge exige ese tipo) y se registra como `ImmediateWindowProvider` con el nombre `pondering` mediante `META-INF/services`. Al estar en `mods/` con ese servicio, FML lo carga en la capa SERVICE.
-- **Sustitución de elementos**: tras `initialize`, un hilo cambia por reflexión la lista privada `elements` por un único `PonderingElement`. Como el constructor de `RenderElement` pide un tipo no público, se instancia con `Unsafe.allocateInstance`.
-- **Render propio** (`Scene`): shader GLSL 150 con dos modos (texto desde atlas de `stb_truetype` y rectángulos redondeados por SDF), atlas con oversampling 2×2, glifos centrados por su caja real.
-- **Colores**: se parchean por reflexión `ColourScheme.RED/BLACK` para que el fondo y el fundido final usen el crema.
-- **Compatibilidad de módulos**: `Module.addReads` solo funciona sobre el propio módulo del llamador, así que `updateModuleReads` se reimplementa en el mod.
-- **Seguridad**: si algo falla al montar la pantalla, se queda la de NeoForge; los errores van a `logs/pondering-trace.log` (los pasos, solo con `-Dpondering.trace=true`).
+## Uninstalling
 
-## Compilar
+Set `earlyWindowProvider = "fmlearlywindow"` in `config/fml.toml` and delete the jar from `mods`.
+If you only delete the jar, NeoForge will find no provider named `pondering` and start without an early window — the game still launches.
 
-```bash
-./build.sh        # genera build/PMM-1.0.jar (usa las librerías de Prism Launcher)
+## How it works
+
+```mermaid
+flowchart LR
+    A[FML starts] --> B[Discovers PMM jar<br/>in SERVICE layer]
+    B --> C[PonderingWindow<br/>extends DisplayWindow]
+    C --> D[Stock window created<br/>+ GL context]
+    D --> E[Element list swapped<br/>for PonderingElement]
+    E --> F[Scene draws<br/>spinner + progress bars]
+    F --> G[Handoff to Minecraft's<br/>loading overlay + fade]
 ```
 
-`build.sh` compila contra las librerías de Prism (`PRISM_LIBS` para cambiar la ruta). Prueba visual sin Minecraft: `test/Harness.java` abre una ventana 854×480 y guarda capturas PNG.
+NeoForge's loading overlay insists on receiving a `DisplayWindow`, and most of that class's drawing pieces are package-private. So PMM **subclasses `DisplayWindow`**, keeps all window/context/handoff logic, and replaces only what is drawn:
 
-## Créditos
+1. The jar ships a `META-INF/services/…ImmediateWindowProvider` entry, so FML loads it in the **SERVICE layer** and picks it when `earlyWindowProvider = "pondering"`.
+2. After the stock window initialises, a short-lived thread swaps the private `elements` list (reflection) for a single `PonderingElement`.
+3. `RenderElement`'s constructor takes a non-public type, so the element is created with `Unsafe.allocateInstance` and only `render(...)` is used.
+4. `Scene` renders everything with its own GLSL 150 shader — either text from a `stb_truetype` atlas or rounded rectangles via a signed-distance function.
+5. `ColourScheme.RED/BLACK` are patched by reflection so the clear colour and the final fade use the cream background.
+6. `Module.addReads` only lets a caller modify its own module, so `updateModuleReads` is re-implemented inside the mod instead of calling `super`.
 
-Estilo inspirado en el spinner de "pensando" de los asistentes de IA en editores. Proyecto independiente, sin relación con Mojang, NeoForged ni Anthropic. Licencia MIT.
+## Tech stack
+
+| Area | Technology |
+|---|---|
+| Language | Java 21 |
+| Rendering | OpenGL 3.2 core via LWJGL 3.3.3 (GLFW, OpenGL) |
+| Text | `stb_truetype` (LWJGL), 2×2 oversampled glyph atlas, Segoe UI + Segoe UI Symbol |
+| Shading | GLSL 150, SDF rounded rectangles |
+| Integration | NeoForge FML 4.0.x early-window SPI (`ImmediateWindowProvider`) |
+| Packaging | Plain `javac` + `jar` (`build.sh`), automatic module `pondering_loading` |
+
+## Project layout
+
+```text
+src/pondering/loading/
+├── PonderingWindow.java    # ImmediateWindowProvider (extends DisplayWindow)
+├── PonderingElement.java   # the single RenderElement that delegates to Scene
+├── Scene.java              # all drawing: glyph, verbs, typing cascade, progress bars
+└── Trace.java              # optional disk trace for debugging
+resources/META-INF/services # provider registration
+test/Harness.java           # renders the Scene in a plain window and saves PNGs
+dist/PMM-1.0.jar            # prebuilt mod
+docs/                       # GIF and screenshots
+```
+
+## Building from source
+
+```bash
+./build.sh        # produces build/PMM-1.0.jar
+```
+
+`build.sh` compiles against the libraries bundled with [Prism Launcher](https://prismlauncher.org/) (override the location with `PRISM_LIBS`). It needs a JDK 21 on `PATH`.
+
+To preview the screen without launching Minecraft, compile and run `test/Harness.java` (needs the LWJGL natives on the classpath); pass `gif` as the second argument to dump an animation's frames.
+
+## Troubleshooting
+
+| Symptom | Fix |
+|---|---|
+| The stock red screen appears | PMM failed to set up; check `logs/latest.log` for `PONDERING` lines and `logs/pondering-trace.log` |
+| No early window at all | `earlyWindowProvider` is `"pondering"` but the jar is missing from `mods` |
+| Game exits right after "Launching target" | The error is written to `logs/pondering-trace.log` — open an issue with its stack trace |
+| Need step-by-step diagnostics | Add `-Dpondering.trace=true` to the JVM arguments |
+
+## Credits & license
+
+Style inspired by the "thinking" spinner of AI coding assistants. PMM is an independent project and is not affiliated with Mojang, NeoForged or Anthropic.
+
+Released under the [MIT License](LICENSE).

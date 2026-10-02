@@ -10,7 +10,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL32C;
 
-/** Prueba visual sin Minecraft: abre una ventana 854x480, dibuja la Scene y guarda capturas PNG. */
+/** Visual test without Minecraft: opens an 854x480 window, draws the Scene and saves PNG captures. */
 public class Harness {
     public static void main(String[] args) throws Exception {
         String out = args.length > 0 ? args[0] : ".";

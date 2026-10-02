@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalTime;
 
-/** Traza a disco (logs/pondering-trace.log). Los pasos solo se escriben con -Dpondering.trace=true; los errores siempre. */
+/** Disk trace (logs/pondering-trace.log). Steps are only written with -Dpondering.trace=true; errors always are. */
 final class Trace {
     private static final Path FILE = Path.of("logs", "pondering-trace.log");
 

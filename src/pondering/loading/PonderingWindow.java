@@ -15,10 +15,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Ventana de carga temprana con el estilo "Pondering...".
- * Hereda de DisplayWindow (la sobrecarga de carga de NeoForge exige ese tipo) y solo cambia
- * lo que se dibuja. Si algo falla, queda la pantalla normal de NeoForge.
- * Activar con earlyWindowProvider = "pondering" en config/fml.toml.
+ * Early loading window with the "Pondering..." style.
+ * Extends DisplayWindow (NeoForge's loading overlay requires that type) and only changes what
+ * is drawn. If anything fails, NeoForge's stock screen stays.
+ * Enable with earlyWindowProvider = "pondering" in config/fml.toml.
  */
 public class PonderingWindow extends DisplayWindow {
     private static final Logger LOGGER = LoggerFactory.getLogger("PONDERING");
@@ -33,7 +33,7 @@ public class PonderingWindow extends DisplayWindow {
         try {
             recolour();
         } catch (Throwable t) {
-            LOGGER.error("No se pudo cambiar el color de fondo", t);
+            LOGGER.error("Could not change the background colour", t);
         }
         Runnable tick = super.initialize(arguments);
         Thread swap = new Thread(this::swapElements, "pondering-swap");
@@ -43,8 +43,8 @@ public class PonderingWindow extends DisplayWindow {
     }
 
     /**
-     * Igual que el original, pero Module.addReads solo deja modificar el modulo del llamador:
-     * aqui el modulo es el de este mod, asi que se busca el metodo y se guarda en el campo privado.
+     * Same as the original, but Module.addReads only lets a caller modify its own module, and
+     * here that module is the mod's: so the method is looked up and stored in the private field.
      */
     @Override
     public void updateModuleReads(ModuleLayer layer) {
@@ -63,7 +63,7 @@ public class PonderingWindow extends DisplayWindow {
         }
     }
 
-    /** Sin logo de Mojang: la pantalla es siempre la misma. */
+    /** No Mojang logo: the screen is always the same. */
     @Override
     public void addMojangTexture(int textureId) {
     }
@@ -96,10 +96,10 @@ public class PonderingWindow extends DisplayWindow {
                 lock.release();
             }
             Trace.log("elements swapped");
-            LOGGER.info("Pantalla de carga Pondering activa");
+            LOGGER.info("Pondering loading screen active");
         } catch (Throwable t) {
             Trace.error("swap failed", t);
-            LOGGER.error("No se pudo montar la pantalla Pondering, se queda la de NeoForge", t);
+            LOGGER.error("Could not set up the Pondering screen, keeping NeoForge's", t);
         }
     }
 

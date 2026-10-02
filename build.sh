@@ -1,5 +1,5 @@
 #!/bin/bash
-# Compila el mod contra las librerias de Prism (NeoForge 21.1.252 / FML 4.0.44 / LWJGL 3.3.3) y genera el jar.
+# Builds the mod against Prism's libraries (NeoForge 21.1.252 / FML 4.0.44 / LWJGL 3.3.3) and produces the jar.
 set -e
 cd "$(dirname "$0")"
 L="${PRISM_LIBS:-C:/Users/mim/AppData/Roaming/PrismLauncher/libraries}"

@@ -9,9 +9,9 @@ import net.neoforged.fml.loading.progress.StartupNotificationManager;
 import sun.misc.Unsafe;
 
 /**
- * Unico elemento de la ventana temprana: lo dibuja todo la Scene.
- * El constructor de RenderElement pide un tipo no publico, asi que se crea saltandolo (Unsafe)
- * y solo se usa el metodo render.
+ * The only element of the early window: Scene draws everything.
+ * RenderElement's constructor takes a non-public type, so the instance is created without
+ * running it (Unsafe) and only the render method is used.
  */
 public final class PonderingElement extends RenderElement {
     private static final Scene SCENE = new Scene();
