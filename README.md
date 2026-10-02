@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/icon.png" alt="PMM icon" width="128">
+
 # PMM — Pondering Minecraft Mods
 
 **A calm, animated early loading screen for NeoForge 1.21.1.**<br>
@@ -123,8 +125,9 @@ src/pondering/loading/
 ├── Scene.java              # all drawing: glyph, verbs, typing cascade, progress bars
 └── Trace.java              # optional disk trace for debugging
 resources/META-INF/services # provider registration
+resources/META-INF/neoforge.mods.toml + pmm-icon.png  # mod metadata and icon
 test/Harness.java           # renders the Scene in a plain window and saves PNGs
-dist/PMM-1.0.jar            # prebuilt mod
+dist/PMM-1.0.jar            # prebuilt mod (shows the icon in Prism's mod list)
 docs/                       # GIF and screenshots
 ```
 

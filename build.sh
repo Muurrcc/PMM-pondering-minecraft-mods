@@ -7,7 +7,7 @@ CP="$L/net/neoforged/fancymodloader/loader/4.0.44/loader-4.0.44.jar;$L/net/neofo
 for m in lwjgl lwjgl-glfw lwjgl-opengl lwjgl-stb; do CP="$CP;$L/org/lwjgl/$m/3.3.3/$m-3.3.3.jar"; done
 rm -rf build && mkdir -p build/classes
 javac -nowarn -d build/classes -cp "$CP" src/pondering/loading/*.java
-cp -r resources/META-INF build/classes/
+cp -r resources/META-INF resources/pmm-icon.png build/classes/
 jar --create --file build/PMM-1.0.jar --manifest resources/manifest.mf -C build/classes .
 echo "$CP" > build/classpath.txt
 echo "OK build/PMM-1.0.jar"

@@ -1,0 +1,15 @@
+modLoader = "lowcodefml"
+loaderVersion = "[1,)"
+license = "MIT"
+issueTrackerURL = "https://github.com/Muurrcc/PMM-pondering-minecraft-mods/issues"
+
+[[mods]]
+modId = "pmm"
+version = "1.0.0"
+displayName = "PMM - Pondering Minecraft Mods"
+logoFile = "pmm-icon.png"
+authors = "Muurrcc, Claude (Anthropic)"
+description = '''
+A calm, animated early loading screen for NeoForge: cycling verbs, a breathing glyph and the real mod-loading progress bars.
+Enable it with earlyWindowProvider = "pondering" in config/fml.toml.
+'''
